@@ -1,39 +1,108 @@
-//console.log('Write your code here');
-const imageLocation = document.getElementById("exhibit-image");
-const exhibitDescription = document.getElementById("exhibit-description");
 const exhibitTitle = document.getElementById("exhibit-title");
-const commentsSection = document.getElementById("comments-section");
-const ticketsBought = document.getElementById("tickets-bought");
-const ticketsButton = document.getElementById("buy-tickets-button");
-let counter = 0
+const exhibitImage = document.getElementById("exhibit-image");
+const exhibitDescription = document.getElementById("exhibit-description");
+const exhibitComment = document.getElementById("comments-section");
+const commentForm = document.getElementById("comment-form");
+const commentInput = document.querySelector('input[name="comment-input"]');
+const buyTicketsButton = document.getElementById("buy-tickets-button");
+let ticketCount = 0;
+const ticketBought = document.getElementById("tickets-bought");
 fetch("http://localhost:3000/current-exhibits/1")
-  .then((response) => response.json())
+  .then((res) => res.json())
   .then((exhibit) => {
-    imageLocation.src = exhibit.image;
-    exhibitDescription.textContent = exhibit.description;
     exhibitTitle.textContent = exhibit.title;
-    ticketsBought.textContent = `${exhibit.tickets_bought} tickets bought.`;
+    exhibitImage.src = exhibit.image;
+    exhibitDescription.textContent = exhibit.description;
     exhibit.comments.forEach((comment) => {
-      postComments(comment);
+      const pElement = document.createElement("p");
+      pElement.textContent = comment;
+      exhibitComment.appendChild(pElement);
     });
   });
 
-function postComments(comment) {
-  const newComment = document.createElement("p");
-  newComment.textContent = comment;
-  commentsSection.appendChild(newComment);
-}
-
-const commentForm = document.getElementById("comment-form");
 commentForm.addEventListener("submit", (event) => {
   event.preventDefault();
-  const inputComment = event.target[0].value;
-  postComments(inputComment);
+  const newP = document.createElement("p");
+  newP.textContent = commentInput.value;
+
+  exhibitComment.appendChild(newP);
 });
 
-ticketsButton.addEventListener("click", ticketCounter)
+buyTicketsButton.addEventListener("click", () => {
+  ticketCount++
+  ticketBought.textContent = ticketCount + " " + "tickets";
+});
 
-function ticketCounter() {
-  counter++;
-  ticketsBought.textContent = `${counter} tickets bought.`;
+/* const exhibitTitle = document.getElementById("exhibit-title");
+const exhibitImage = document.getElementById("exhibit-image");
+const exhibitDescription = document.getElementById("exhibit-description");
+const ticketsBoughtElement = document.getElementById("tickets-bought");
+const commentsSection = document.getElementById("comments-section");
+let numOfTicketsBought;
+//deliverable one
+fetch("http://localhost:3000/current-exhibits")
+  .then((res) => res.json())
+  .then((exhibits) => {
+    exhibitTitle.textContent = exhibits[0].title;
+    exhibitImage.src = exhibits[0].image;
+    exhibitDescription.textContent = exhibits[0].decription;
+    numOfTicketsBought = exhibits[0].tickets_bought;
+    ticketsBoughtElement.textContent = `${numOfTicketsBought} Tickets Bought`;
+
+    exhibits[0].comments.forEach(comment => {
+      addComment(comment);
+    });
+  });
+
+function addComment(comment) {
+  const pElement = document.createElement('p');
+  pElement.textContent = comment;
+  commentsSection.appendChild(pElement);
 }
+
+//deliverable two
+const commentForm = document.getElementById('comment-form')
+commentForm.addEventListener('submit', (event) => {
+   event.preventDefault()
+   const newComment = event.target[0].value
+   addComment(newComment)
+})
+
+//deliverable 3
+const buyTicketsButton = document.getElementById('buy-tickets-button')
+buyTicketsButton.addEventListener('click', () => {
+  numOfTicketsBought++
+  ticketsBoughtElement.textContent = `${numOfTicketsBought} Tickets Bought`
+})
+
+
+/*
+const exhibitTitle = document.getElementById("exhibit-title");
+const exhibitDescription = document.getElementById("exhibit-description");
+const exhibitImage = document.getElementById("exhibit-image");
+const ticketsBoughtElement = document.getElementById("tickets-bought");
+const commentsSection = document.getElementById("coments-section");
+let numOfticketsBought;
+
+fetch("http://localhost:3000/current-exhibits")
+  .then((res) => res.json())
+  .then((exhibits) => {
+    exhibitTitle.textContent = exhibits[0].title;
+    exhibitDescription.textContent = exhibits[0].description;
+    exhibitImage.src = exhibits[0].image;
+    numOfTicketsBought = exhibits[0].tickets_bought
+    ticketsBoughtElement.textContent = `${numOfTicketsBought} Tickets Bought`
+  
+    exhibits[0].comments.forEach(comment => {
+      addComment(comment);
+    });
+  });
+
+  function addComment(comment) {
+    const pElement = document.createElement('p');
+    pElement.textContent = comment;
+    commentsSection.appendChild(pElement);
+  }
+  
+
+*/
